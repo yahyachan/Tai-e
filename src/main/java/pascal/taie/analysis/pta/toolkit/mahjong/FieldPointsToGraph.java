@@ -57,18 +57,22 @@ class FieldPointsToGraph {
             for (LoadField load : var.getLoadFields()) {
                 if (isConcerned(load.getRValue())) {
                     for (Obj baseObj : pta.getPointsToSet(var)) {
-                        Field field = factory.get(load.getFieldRef().resolve());
-                        Set<Obj> pts = pta.getPointsToSet(load.getRValue());
-                        addFieldPointsTo(baseObj, field, pts);
+                        if (baseObj.isFunctional()) {
+                            Field field = factory.get(load.getFieldRef().resolve());
+                            Set<Obj> pts = pta.getPointsToSet(load.getRValue());
+                            addFieldPointsTo(baseObj, field, pts);
+                        }
                     }
                 }
             }
             for (LoadArray load : var.getLoadArrays()) {
                 if (isConcerned(load.getRValue())) {
                     for (Obj baseObj : pta.getPointsToSet(var)) {
-                        Field field = factory.getArrayIndex();
-                        Set<Obj> pts = pta.getPointsToSet(load.getRValue());
-                        addFieldPointsTo(baseObj, field, pts);
+                        if (baseObj.isFunctional()) {
+                            Field field = factory.getArrayIndex();
+                            Set<Obj> pts = pta.getPointsToSet(load.getRValue());
+                            addFieldPointsTo(baseObj, field, pts);
+                        }
                     }
                 }
             }
