@@ -27,6 +27,7 @@ import pascal.taie.analysis.pta.core.heap.Obj;
 import pascal.taie.ir.exp.Exp;
 import pascal.taie.ir.stmt.LoadArray;
 import pascal.taie.ir.stmt.LoadField;
+import pascal.taie.language.classes.JField;
 import pascal.taie.language.type.NullType;
 import pascal.taie.language.type.ReferenceType;
 import pascal.taie.language.type.Type;
@@ -58,8 +59,9 @@ class FieldPointsToGraph {
                 if (isConcerned(load.getRValue())) {
                     for (Obj baseObj : pta.getPointsToSet(var)) {
                         if (baseObj.isFunctional()) {
-                            Field field = factory.get(load.getFieldRef().resolve());
-                            Set<Obj> pts = pta.getPointsToSet(load.getRValue());
+                            JField jField = load.getFieldRef().resolve();
+                            Field field = factory.get(jField);
+                            Set<Obj> pts = pta.getPointsToSet(baseObj, jField);
                             addFieldPointsTo(baseObj, field, pts);
                         }
                     }
@@ -70,7 +72,7 @@ class FieldPointsToGraph {
                     for (Obj baseObj : pta.getPointsToSet(var)) {
                         if (baseObj.isFunctional()) {
                             Field field = factory.getArrayIndex();
-                            Set<Obj> pts = pta.getPointsToSet(load.getRValue());
+                            Set<Obj> pts = pta.getPointsToSet(baseObj);
                             addFieldPointsTo(baseObj, field, pts);
                         }
                     }
